@@ -1,0 +1,36 @@
+BasedOnStyle: Google
+
+Language: Cpp
+
+Standard: Cpp11
+
+IndentWidth: 2
+
+ColumnLimit: 100
+
+# Always break before braces
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass: true
+  AfterControlStatement: true
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterStruct: true
+  AfterUnion: true
+  BeforeCatch: true
+  BeforeElse: true
+  IndentBraces: false
+
+IndentCaseLabels: true
+
+PointerAlignment: Right
+
+AlignOperands: true
+AlignConsecutiveAssignments: false
+
+AccessModifierOffset: -1
+
+AllowShortCaseLabelsOnASingleLine: true
+
+KeepEmptyLinesAtTheStartOfBlocks: true
