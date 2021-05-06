@@ -71,16 +71,19 @@ class FastLedController
    * @tparam LED_COUNT Number of LEDs of the stripe.
    * @param config LedConfiguration to be used.
    * @param initialBrightness Initial brightness to be set.
+   * @param correction Sets the color correction for the stripe.
    */
   template <uint32_t LED_PIN, uint32_t LED_COUNT>
   FastLedController(const LedConfiguration<LED_PIN, LED_COUNT>& config,
-                    const LedBrightness initialBrightness)
-      : mLeds{LED_COUNT}
+                    const LedBrightness initialBrightness,
+                    const CRGB correction = TypicalPixelString)
+      : mLeds{LED_COUNT, CRGB::Black}
   /* Use implicit default initialization for mHsvLeds to support the #ifdef
    * _LED_CONTROL_DYN_BRIGHTNESS */
   {
-    FastLED.addLeds<WS2812B, LED_PIN>(mLeds.data(), LED_COUNT).setCorrection(TypicalLEDStrip);
-    FastLED.setBrightness(initialBrightness);
+    FastLED.addLeds<WS2812B, LED_PIN>(mLeds.data(), LED_COUNT).setCorrection(correction);
+    SetStripeBrightness(initialBrightness);
+    Show();
   };
   ~FastLedController() = default;
 
