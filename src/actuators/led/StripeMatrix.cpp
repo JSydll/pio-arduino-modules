@@ -16,19 +16,22 @@
 using namespace ArduinoModules::Actuators::LED;
 
 void StripeMatrix::SetDotsInRow(const MatrixCoordinate row, const MatrixCoordinate from,
-                                const MatrixCoordinate to, const CRGB color)
+                                const MatrixCoordinate to, const CRGB color, const bool show)
 {
   const auto fromLed = GetDotLedIndex(Dot{row, from});
   const auto toLed = GetDotLedIndex(Dot{row, to});
   mLedController.FillWithColor(color, LedRange{fromLed, toLed});
-  mLedController.Show();
+  if (show)
+  {
+    mLedController.Show();
+  }
 }
 
-void StripeMatrix::SetDotRange(const Dot& begin, const Dot& end, const CRGB color)
+void StripeMatrix::SetDotRange(const Dot& begin, const Dot& end, const CRGB color, const bool show)
 {
   for (auto y = begin.y; y <= end.y; ++y)
   {
-    SetDotsInRow(y, begin.x, end.x, color);
+    SetDotsInRow(y, begin.x, end.x, color, show);
   }
 }
 

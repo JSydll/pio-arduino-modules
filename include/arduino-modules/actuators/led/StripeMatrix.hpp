@@ -80,29 +80,31 @@ class StripeMatrix
    * @param from Starting coordinate of the first dot to be enlightened.
    * @param to Coordinate of the last dot to be enlightened.
    * @param color Color to be set on the dots.
+   * @param show Indicates whether the dots shall be showed immediately.
    */
   void SetDotsInRow(const MatrixCoordinate row, const MatrixCoordinate from,
-                    const MatrixCoordinate to, const CRGB color);
+                    const MatrixCoordinate to, const CRGB color, const bool show = true);
 
   /**
    * @brief Sets a range of dots (e.g. a rectangle)
-   * 
+   *
    * @param from Upper left dot in the range.
    * @param to Lower right dot in the range.
    * @param color Color to be set on the dots.
+   * @param show Indicates whether the dots shall be showed immediately.
    */
-  void SetDotRange(const Dot& from, const Dot& to, const CRGB color);
+  void SetDotRange(const Dot& from, const Dot& to, const CRGB color, const bool show = true);
 
   /**
    * @brief Exposes the underlying LedController.
-   * 
+   *
    * @return FastLedController& Controller to manipulate single LEDs.
    */
   FastLedController& GetLedController();
 
   /**
-   * @brief Calculates the LED index from the 
-   * 
+   * @brief Calculates the LED index from the
+   *
    * @param dot Dot on the matrix.
    * @return LedIndex Native index on the underlying stripe.
    */
