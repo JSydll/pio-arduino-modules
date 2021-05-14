@@ -17,14 +17,18 @@ CRGBPalette16 CreateRandomPalette16()
 
 LedRange FastLedController::CheckRange(const LedRange& range)
 {
-  const bool fullStripe = (range == LedRange{});
-  const LedIndex begin = (fullStripe ? 0 : range.first);
-  const LedIndex end = (fullStripe ? mLeds.size() - 1 : range.second);
-  if (begin > end)
+  LedRange corrected{((range.first > range.second) ? LedRange{range.second, range.first} : range)};
+  const auto lastLed = mLeds.size() - 1;
+  if (corrected.second > lastLed)
   {
-    return {};
+    corrected.second = lastLed;
   }
-  return {begin, end};
+  return corrected;
+}
+
+void FastLedController::FillWithColor(const CRGB color)
+{
+  FillWithColor(color, LedRange{0, mLeds.size() - 1});
 }
 
 void FastLedController::FillWithColor(const CRGB color, const LedIndex led) { mLeds[led] = color; }
@@ -36,6 +40,12 @@ void FastLedController::FillWithColor(const CRGB color, const LedRange& range)
   {
     FillWithColor(color, led);
   }
+}
+
+void FastLedController::FillFromPalette(const CRGBPalette16& palette, const PaletteColorIndex color,
+                                        const bool blend)
+{
+  FillFromPalette(palette, color, LedRange{0, mLeds.size() - 1}, blend);
 }
 
 void FastLedController::FillFromPalette(const CRGBPalette16& palette, const PaletteColorIndex color,
@@ -104,3 +114,9 @@ void FastLedController::AdoptLedBrightnessTo(const LedBrightnessDifferential dif
 #endif  // #ifdef _LED_CONTROL_DYN_BRIGHTNESS
 
 void FastLedController::Show() { FastLED.show(); }
+
+void FastLedController::Reset()
+{
+  FillWithColor(CRGB::Black);
+  Show();
+}

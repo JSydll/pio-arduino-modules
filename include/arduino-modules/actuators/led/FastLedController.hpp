@@ -77,7 +77,7 @@ class FastLedController
   FastLedController(const LedConfiguration<LED_PIN, LED_COUNT>& config,
                     const LedBrightness initialBrightness,
                     const CRGB correction = TypicalPixelString)
-      : mLeds{LED_COUNT, CRGB::Black}
+      : mLeds(LED_COUNT, CRGB::Black)
   /* Use implicit default initialization for mHsvLeds to support the #ifdef
    * _LED_CONTROL_DYN_BRIGHTNESS */
   {
@@ -86,6 +86,13 @@ class FastLedController
     Show();
   };
   ~FastLedController() = default;
+
+  /**
+   * @brief Fills the complete string with the specified color.
+   *
+   * @param color Color to be set.
+   */
+  void FillWithColor(const CRGB color);
 
   /**
    * @brief Fills a single LED pixel with the given color.
@@ -99,9 +106,19 @@ class FastLedController
    * @brief Fills a range of LEDs with the given color.
    *
    * @param color Color to be set.
-   * @param range Range to be set. If left empty, the complete sripe will be set.
+   * @param range Range to be set.
    */
-  void FillWithColor(const CRGB color, const LedRange& range = LedRange{});
+  void FillWithColor(const CRGB color, const LedRange& range);
+
+  /**
+   * @brief Fills the complete stripe with the color from the palette.
+   *
+   * @param palette Palette to be used.
+   * @param color Index of the color in the palette.
+   * @param blend Flag if color blending should be used (defaults to true).
+   */
+  void FillFromPalette(const CRGBPalette16& palette, PaletteColorIndex color,
+                       const bool blend = true);
 
   /**
    * @brief Fills a single LED pixel with the selected color from the palette.
@@ -119,11 +136,11 @@ class FastLedController
    *
    * @param palette Palette to be used.
    * @param colorIndex Index of the color in the palette.
-   * @param range Range to be set. If left empty, the complete sripe will be set.
+   * @param range Range to be set.
    * @param blend Flag if color blending should be used (defaults to true).
    */
   void FillFromPalette(const CRGBPalette16& palette, const PaletteColorIndex color,
-                       const LedRange& range = LedRange{}, const bool blend = true);
+                       const LedRange& range, const bool blend = true);
 
   /**
    * @brief Sets the brightness for the complete stripe.
@@ -165,6 +182,11 @@ class FastLedController
    * @brief Actually show the currently configured state of the LEDs.
    */
   void Show();
+
+  /**
+   * @brief Switch all LEDs off.
+   */
+  void Reset();
 
  private:
   std::vector<CRGB> mLeds;
