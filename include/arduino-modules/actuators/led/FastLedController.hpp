@@ -50,8 +50,9 @@ using LedBrightnessDifferential = int16_t;       //!< Differential of brigthness
  * constructor of the FastLedController (as ctors cannot be called directly).
  * @tparam LED_PIN Pin of the LED stripe to set up.
  * @tparam LED_COUNT Number of LEDs of the stripe.
+ * @tparam LED_TYPE Used to specify the LED wiring type.
  */
-template <uint32_t LED_PIN, uint32_t LED_COUNT>
+template <uint32_t LED_PIN, uint32_t LED_COUNT, EOrder LED_TYPE = EOrder::RGB>
 struct LedConfiguration
 {
 };
@@ -69,19 +70,24 @@ class FastLedController
    *
    * @tparam LED_PIN Pin of the LED stripe to set up.
    * @tparam LED_COUNT Number of LEDs of the stripe.
+   * @tparam LED_TYPE Used to specify the LED wiring type.
    * @param config LedConfiguration to be used.
    * @param initialBrightness Initial brightness to be set.
+   * @param temperature Color temperature for the stripe
    * @param correction Sets the color correction for the stripe.
+   *
    */
-  template <uint32_t LED_PIN, uint32_t LED_COUNT>
-  FastLedController(const LedConfiguration<LED_PIN, LED_COUNT>& config,
+  template <uint32_t LED_PIN, uint32_t LED_COUNT, EOrder LED_TYPE>
+  FastLedController(const LedConfiguration<LED_PIN, LED_COUNT, LED_TYPE>& config,
                     const LedBrightness initialBrightness,
-                    const CRGB correction = TypicalPixelString)
+                    const ColorTemperature temperature = ColorTemperature::Tungsten40W,
+                    const LEDColorCorrection correction = LEDColorCorrection::TypicalPixelString)
       : mLeds(LED_COUNT, CRGB::Black)
   /* Use implicit default initialization for mHsvLeds to support the #ifdef
    * _LED_CONTROL_DYN_BRIGHTNESS */
   {
-    FastLED.addLeds<WS2812B, LED_PIN>(mLeds.data(), LED_COUNT).setCorrection(correction);
+    FastLED.addLeds<WS2812B, LED_PIN, LED_TYPE>(mLeds.data(), LED_COUNT).setCorrection(correction);
+    FastLED.setTemperature(temperature);
     SetStripeBrightness(initialBrightness);
     Show();
   };

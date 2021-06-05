@@ -31,8 +31,10 @@ namespace ArduinoModules::Actuators::LED
  * @tparam LED_PIN Pin on which the stripe's data wire is connected.
  * @tparam LED_COUNT_X Number of dots in horizontal direction.
  * @tparam LED_COUNT_Y Number of dots in vertical direction.
+ * @tparam LED_TYPE Used to specify the LED wiring type.
  */
-template <uint32_t LED_PIN, uint32_t LED_COUNT_X, uint32_t LED_COUNT_Y>
+template <uint32_t LED_PIN, uint32_t LED_COUNT_X, uint32_t LED_COUNT_Y,
+          EOrder LED_TYPE = EOrder::RGB>
 struct MatrixConfiguration
 {
 };
@@ -54,13 +56,17 @@ class StripeMatrix
    * @tparam LED_PIN Pin on which the stripe's data wire is connected.
    * @tparam LED_COUNT_X Number of dots in horizontal direction.
    * @tparam LED_COUNT_Y Number of dots in vertical direction.
+   * @tparam LED_TYPE Used to specify the LED wiring type.
    * @param config MatrixConfiguration to be used.
    * @param initialBrightness Brightness of the stripe to be set initially.
+   * @param temperature Color temperature to be used.
    */
-  template <uint32_t LED_PIN, uint32_t LED_COUNT_X, uint32_t LED_COUNT_Y>
-  StripeMatrix(const MatrixConfiguration<LED_PIN, LED_COUNT_X, LED_COUNT_Y>& config,
-               const LedBrightness initialBrightness)
-      : mLedController{LedConfiguration<LED_PIN, LED_COUNT_X * LED_COUNT_Y>{}, initialBrightness},
+  template <uint32_t LED_PIN, uint32_t LED_COUNT_X, uint32_t LED_COUNT_Y, EOrder LED_TYPE>
+  StripeMatrix(const MatrixConfiguration<LED_PIN, LED_COUNT_X, LED_COUNT_Y, LED_TYPE>& config,
+               const LedBrightness initialBrightness,
+               const ColorTemperature temperature = ColorTemperature::Tungsten40W)
+      : mLedController{LedConfiguration<LED_PIN, LED_COUNT_X * LED_COUNT_Y, LED_TYPE>{}, initialBrightness,
+                       temperature},
         mMatrixSizeX{LED_COUNT_X},
         mMatrixSizeY{LED_COUNT_Y}
   {
